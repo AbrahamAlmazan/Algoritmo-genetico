@@ -9,8 +9,8 @@ class DNA {
   // Constructor (makes a random DNA)
   DNA() {
     pasos=new int[600];
-    Pos=new PVector(50, height/2);
-    mov=new Pvector(0,0);
+    pos=new PVector(50, height/2);
+    mov=new PVector(0,0);
   }
   
   void llenar(){
@@ -21,35 +21,44 @@ class DNA {
   
   // Converts character array to a String
   void display() {
-    ellipse(pos.x,pos.y, 50,50);
+    ellipse(pos.x,pos.y, 10,10);
+    background(0);
   }
   
   void update(){
      for(int i =0;i<pasos.length;i++){
        switch(pasos[i]){
         case 0:
-            mov.add(-10,-10);
+            mov.x=-10;
+            mov.y=-10;
            break;
        case 1:
-            mov.add(0,-10);
+           mov.x=-0;
+            mov.y=-10;
            break;   
        case 2:
-            mov.add(10,-10);
-           break;
+            mov.x=10;
+            mov.y=-10;
+            break;
        case 3:
-            mov.add(10,0);
-           break;
+            mov.x=10;
+            mov.y=0;
+            break;
        case 4:
-            mov.add(10,10);
-           break;
+            mov.x=10;
+            mov.y=10;
+            break;
        case 5:
-            mov.add(0,10);
-           break;
+            mov.x=0;
+            mov.y=10;
+            break;
        case 6:
-            mov.add(-10,10);
-           break;  
+            mov.x=-10;
+            mov.y=10;
+            break;  
        case 7:
-            mov.add(-10,0);
+            mov.x=-10;
+            mov.y=0;
            break; 
        }
        pos.add(mov);

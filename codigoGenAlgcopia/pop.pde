@@ -3,17 +3,17 @@ class Population {
   float mutationRate;           // Mutation rate
   DNA[] population;             // Array to hold the current population
   ArrayList<DNA> matingPool;    // ArrayList which we will use for our "mating pool"
-  String target;                // Target phrase
+  PVector target;                // Target phrase
   int generations;              // Number of generations
   boolean finished;             // Are we finished evolving?
   int perfectScore;
 
-  Population(String p, float m, int num) {
-    target = p;
-    mutationRate = m;
+  Population(float m, float n, float mut, int num) {
+    target = new PVector(m,n);
+    mutationRate = mut;
     population = new DNA[num];
     for (int i = 0; i < population.length; i++) {
-      population[i] = new DNA(target.length());
+      population[i] = new DNA();
     }
     calcFitness();
     matingPool = new ArrayList<DNA>();
@@ -23,10 +23,16 @@ class Population {
     perfectScore = 1;
   }
 
+
+  void mov() {
+    for (int i = 0; i < population.length; i++) {
+      population[i].update();
+    }
+  }
   // Fill our fitness array with a value for every member of the population
   void calcFitness() {
     for (int i = 0; i < population.length; i++) {
-      population[i].fitness(target);
+      population[i].fitness(target.x,target.y);
     }
   }
 
@@ -35,9 +41,9 @@ class Population {
     // Clear the ArrayList
     matingPool.clear();
 
-    float maxFitness = 0;
+    float maxFitness = 600;
     for (int i = 0; i < population.length; i++) {
-      if (population[i].fitness > maxFitness) {
+      if (population[i].fitness < maxFitness) {
         maxFitness = population[i].fitness;
       }
     }
@@ -48,7 +54,7 @@ class Population {
     for (int i = 0; i < population.length; i++) {
       
       float fitness = map(population[i].fitness,0,maxFitness,0,1);
-      int n = int(fitness * 100);  // Arbitrary multiplier, we can also use monte carlo method
+      int n = 100 - int(fitness);  // Arbitrary multiplier, we can also use monte carlo method
       for (int j = 0; j < n; j++) {              // and pick two random numbers
         matingPool.add(population[i]);
       }
@@ -72,18 +78,17 @@ class Population {
 
 
   // Compute the current "most fit" member of the population
-  String getBest(){
-    float worldrecord = 0.0;
+  void getBest(){
+    float worldrecord = 600;
     int index = 0;
     for (int i = 0; i < population.length; i++) {
-      if (population[i].fitness > worldrecord) {
+      if (population[i].fitness < worldrecord) {
         index = i;
         worldrecord = population[i].fitness;
       }
     }
     
-    if (worldrecord == perfectScore ) finished = true;
-    return population[index].getPhrase();
+    if (worldrecord == 0 ) finished = true;
   }
 
   boolean finished() {
@@ -103,15 +108,4 @@ class Population {
     return total / (population.length);
   }
 
-  String allPhrases() {
-    String everything = "";
-    
-    int displayLimit = min(population.length,50);
-    
-    
-    for (int i = 0; i < displayLimit; i++) {
-      everything += population[i].getPhrase() + "\n";
-    }
-    return everything;
-  }
 }
